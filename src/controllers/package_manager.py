@@ -26,30 +26,30 @@ class PackageManager:
         return packages
 
     def get_package_info(self, package_name):
-    package_info = {}
+        package_info = {}
 
-    # Get package name
-    stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<name>"])
-    if stdout.strip():  # Check if there is output
-        package_info["name"] = stdout.strip()
-    else:
-        package_info["name"] = "Unknown"
+        # Get package name
+        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<name>"])
+        if stdout.strip():  # Check if there is output
+            package_info["name"] = stdout.strip()
+        else:
+            package_info["name"] = "Unknown"
 
-    # Get package description
-    stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<description>"])
-    if stdout.strip():
-        package_info["description"] = stdout.strip()
-    else:
-        package_info["description"] = "No description available"
+        # Get package description
+        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<description>"])
+        if stdout.strip():
+            package_info["description"] = stdout.strip()
+        else:
+            package_info["description"] = "No description available"
 
-    # Get package category/name
-    stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<category>/<name>"])
-    if stdout.strip():
-        package_info["category"] = stdout.strip()
-    else:
-        package_info["category"] = "Unknown"
+        # Get package category/name
+        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<category>/<name>"])
+        if stdout.strip():
+            package_info["category"] = stdout.strip()
+        else:
+            package_info["category"] = "Unknown"
 
-    return package_info
+        return package_info
 
     def install_package(self, package_name):
         """
