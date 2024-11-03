@@ -83,13 +83,17 @@ class HomeView(Gtk.Box):
         hbox.pack_start(icon_image, False, False, 0)
         hbox.pack_start(vbox, True, True, 0)
 
-        # Add the package item to the horizontal box
-        self.horizontal_box.pack_start(hbox, True, True, 0)
-
-        # Create a new row if already 3 columns are added
-        if (len(self.horizontal_box.get_children()) % 3) == 0:
-            self.horizontal_box.pack_start(Gtk.Box(orientation=Gtk.Orientation.VERTICAL), False, False, 0)  # Space for new row
-
+        # Use a 3-column layout inside the horizontal box
+        if self.column_count < 3:
+            self.current_column_box.pack_start(hbox, True, True, 0)  # Add to current column
+            self.column_count += 1  # Move to the next column
+        else:
+            # If 3 columns are already there, create a new column
+            self.current_column_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            self.horizontal_box.pack_start(self.current_column_box, True, True, 0)  # Add new column to horizontal box
+            self.current_column_box.pack_start(hbox, True, True, 0)  # Add new package item to the new column
+            self.column_count = 1  # Reset the column count
+            
         self.packages_box.show_all()
 
     def load_alerts(self):
