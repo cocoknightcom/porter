@@ -40,6 +40,7 @@ class HomeView(Gtk.Box):
         
         self.horizontal_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)  # Create a box for the 3-columns layout
         self.packages_box.pack_start(self.horizontal_box, True, True, 0)  # Add to the main box
+        self.current_column_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.current_row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.horizontal_box.pack_start(self.current_row, True, True, 0)  # Start with the first column
         
