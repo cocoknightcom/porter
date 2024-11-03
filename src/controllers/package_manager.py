@@ -28,10 +28,12 @@ class PackageManager:
 
     def get_package_info(self, package_name):
         stdout, _ = run_command(["equery", "meta", package_name])
-        # Here you can refine this to fetch only the description if the output includes more
-        # Assuming the first line is the description
-        description = stdout.splitlines()[0].strip() if stdout else "No description available"
-        return {"name": package_name, "description": description}
+        if stdout:
+            lines = stdout.splitlines()
+            description = lines[0].strip() if len(lines) > 0 else "No description available"
+            category = package_name.split('/')[0]  # Assuming that package_name is of the format 'category/name'
+            return {"name": package_name, "description": description, "category": category}
+        return {"name": package_name, "description": "No description available", "category": "Unknown"}
 
     def install_package(self, package_name):
         """

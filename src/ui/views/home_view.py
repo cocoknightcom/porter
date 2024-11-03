@@ -61,14 +61,15 @@ class HomeView(Gtk.Box):
         """Create and add a package item to display."""
         # Create a vertical box for text
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)
-        name_label = Gtk.Label(label=package["name"])
-        description_label = Gtk.Label(label=package["description"])
         
         # Set name as a title (bold) and description as normal text
+        name_label = Gtk.Label(label=package["name"])
+        description_label = Gtk.Label(label=f"{package['description']}\n<small>Category: {package['category']}</small>")
+        
         name_label.set_use_markup(True)  # Enable markup for formatting
         name_label.set_label(f"<b>{package['name']}</b>")
-        description_label.set_use_markup(False)  # Normal text for description
-
+        description_label.set_use_markup(True)  # Enable markup for formatting
+        
         # Align text to the left
         name_label.set_xalign(0)
         description_label.set_xalign(0)
