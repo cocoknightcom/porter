@@ -15,36 +15,20 @@ class PackageManager:
         for line in stdout.splitlines():
             package_name = line.strip()
             package_info = self.get_package_info(package_name)
+            # Append only user-installed packages with their short descriptions
             packages.append({
                 "name": package_name,
-                "description": package_info["description"],
+                "description": package_info["description"],  # Short description only
             })
 
         return packages
 
     def get_package_info(self, package_name):
         stdout, _ = run_command(["equery", "meta", package_name])
-        info = {"description": stdout.strip()}
-        return info
-    def get_suggested_packages(self):
-        """
-        Retrieve a list of suggested packages based on popularity or recent installs.
-        This is a placeholder and could be enhanced by actual data on popular packages.
-        """
-        # Placeholder approach: Using a hardcoded list of popular packages for now.
-        # For a dynamic solution, integrate with a package popularity service or analyze installed packages.
-
-        suggested_packages = [
-            "vim", "git", "htop", "curl", "gcc", "python", "nodejs", 
-            "docker", "nginx", "postgresql", "tmux", "zsh"
-        ]
-
-        # To get actual data on recent installs or most-used packages, you could:
-        # 1. Parse logs
-        # 2. Query a Gentoo-specific popularity service or package index (if available)
-        # 3. Use other package metadata (future scope)
-
-        return suggested_packages
+        # Here you can refine this to fetch only the description if the output includes more
+        # Assuming the first line is the description
+        description = stdout.splitlines()[0].strip() if stdout else "No description available"
+        return {"name": package_name, "description": description}
 
     def install_package(self, package_name):
         """

@@ -1,6 +1,6 @@
 # src/ui/views/home_view.py
 import os
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from src.controllers.package_manager import PackageManager
 
 class HomeView(Gtk.Box):
@@ -9,11 +9,11 @@ class HomeView(Gtk.Box):
         self.parent = parent
         self.package_manager = PackageManager()
 
-        # Create a search bar with a rounded entry and connect the signal
+        # Create a search bar with a rounded entry
         self.search_bar = Gtk.Entry()
         self.search_bar.set_placeholder_text("Search Packages")
         self.search_bar.set_property("width_chars", 30)
-        self.search_bar.connect("activate", self.on_search_activated)  # Connect signal for enter key
+        self.search_bar.connect("activate", self.on_search_activated)
         self.pack_start(self.search_bar, False, False, 0)
 
         # Quick Actions row
@@ -32,9 +32,12 @@ class HomeView(Gtk.Box):
             button.connect("clicked", callback)
             quick_actions_box.pack_start(button, True, True, 0)
 
-        # Create layout for installed packages
+        # Create a ScrolledWindow for packages
+        self.packages_scrolled_window = Gtk.ScrolledWindow()
         self.packages_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        self.pack_start(self.packages_box, True, True, 0)
+        self.packages_scrolled_window.add(self.packages_box)  # Add packages_box to the scrolled window
+        self.pack_start(self.packages_scrolled_window, True, True, 0)
+        
         self.load_installed_packages()  # Load installed packages when initialized
 
         # Notifications/Alerts section
@@ -49,17 +52,15 @@ class HomeView(Gtk.Box):
     def load_installed_packages(self):
         # Fetch installed packages
         installed_packages = self.package_manager.get_installed_packages()
-        self.packages_box.foreach(lambda widget: self.packages_box.remove(widget))  # Clear previous entries
         for package in installed_packages:
             self.add_package_item(package)
             
     def add_package_item(self, package):
         """Create and add a package item to display."""
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-
-        # Create an image (icon), assuming a placeholder for icons
-        icon_path = f"icons/{package['name']}.png"  # Example path for icons
-        icon_image = Gtk.Image.new_from_file(icon_path) if os.path.exists(icon_path) else Gtk.Image.new_from_icon_name("package", Gtk.IconSize.DIALOG)
+        
+        # Create an image (icon)
+        icon_image = Gtk.Image.new_from_file(package["icon"]) if os.path.exists(package["icon"]) else Gtk.Image.new_from_icon_name("package", Gtk.IconSize.DIALOG)
         hbox.pack_start(icon_image, False, False, 0)
 
         # Create a vertical box for text
