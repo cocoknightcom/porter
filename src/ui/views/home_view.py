@@ -79,18 +79,17 @@ class HomeView(Gtk.Box):
         # Create an image (icon)
         icon_image = Gtk.Image.new_from_file(package["icon"]) if os.path.exists(package["icon"]) else Gtk.Image.new_from_icon_name("package", Gtk.IconSize.DIALOG)
 
-        package_item_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        package_item_box.pack_start(icon_image, False, False, 0)
-        package_item_box.pack_start(vbox, True, True, 0)
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        hbox.pack_start(icon_image, False, False, 0)
+        hbox.pack_start(vbox, True, True, 0)
 
-        # Create a new horizontal box for the packages if necessary
-        if self.column_count % 3 == 0:
-            self.current_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-            self.horizontal_box.pack_start(self.current_row, False, False, 0)
+        # Add the package item to the horizontal box
+        self.horizontal_box.pack_start(hbox, True, True, 0)
 
-        self.current_row.pack_start(package_item_box, True, True, 0)  # Add package item to the current column
-        self.column_count += 1  # Increment column count
-        
+        # Create a new row if already 3 columns are added
+        if (len(self.horizontal_box.get_children()) % 3) == 0:
+            self.horizontal_box.pack_start(Gtk.Box(orientation=Gtk.Orientation.VERTICAL), False, False, 0)  # Space for new row
+
         self.packages_box.show_all()
 
     def load_alerts(self):
