@@ -1,5 +1,6 @@
 # src/ui/views/home_view.py
-from gi.repository import Gtk, GdkPixbuf
+from gi.repository import Gtk
+from src.controllers.package_manager import PackageManager
 
 class HomeView(Gtk.Box):
     def __init__(self, parent):
