@@ -1,7 +1,5 @@
 # src/ui/views/home_view.py
-from gi.repository import Gtk
-from src.controllers.package_manager import PackageManager
-import os  # Import os to handle file icons
+from gi.repository import Gtk, GdkPixbuf
 
 class HomeView(Gtk.Box):
     def __init__(self, parent):
@@ -9,33 +7,45 @@ class HomeView(Gtk.Box):
         self.parent = parent
         self.package_manager = PackageManager()
 
+        # Search Bar
         self.search_bar = Gtk.Entry()
         self.search_bar.set_placeholder_text("Search Packages")
         self.search_bar.set_property("width_chars", 30)
         self.search_bar.connect("activate", self.on_search_activated)
         self.pack_start(self.search_bar, False, False, 0)
 
-        # Quick Actions row
+        # Quick Actions
         quick_actions_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         self.pack_start(quick_actions_box, False, False, 0)
 
+        # Add quick action buttons for package management
         actions = [
             ("Update All", self.on_update_all_clicked),
             ("Sync Portage", self.on_sync_portage_clicked),
-            ("Installed Packages", self.on_view_installed_clicked),
+            ("View Installed Packages", self.on_view_installed_clicked),
             ("Categories", self.on_view_categories_clicked),
         ]
+
         for label, callback in actions:
             button = Gtk.Button(label=label)
             button.connect("clicked", callback)
             quick_actions_box.pack_start(button, True, True, 0)
 
-        # User Installed Packages List
-        self.packages_list = Gtk.ListBox()
-        self.pack_start(self.packages_list, True, True, 0)
-        self.load_installed_packages()
+        # User Installed Packages section
+        self.pack_list_label = Gtk.Label(label="User Installed Packages")
+        self.pack_list_label.set_xalign(0)
+        self.pack_start(self.pack_list_label, False, False, 0)
 
-        # Notifications/Alerts section
+        # Scrolled area for packages
+        self.scrolled_window = Gtk.ScrolledWindow()
+        self.scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self.pack_start(self.scrolled_window, True, True, 0)
+
+        self.pack_list_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.scrolled_window.add(self.pack_list_box)
+        self.load_user_installed_packages()
+
+        # Notifications/Alerts
         alerts_label = Gtk.Label(label="Notifications / Alerts")
         alerts_label.set_xalign(0)
         self.pack_start(alerts_label, False, False, 0)
@@ -44,39 +54,40 @@ class HomeView(Gtk.Box):
         self.pack_start(self.alerts_box, False, False, 0)
         self.load_alerts()
 
-    def load_installed_packages(self):
-        world_packages = self.package_manager.get_world_packages()
-        for package in world_packages:
-            package_info = self.package_manager.get_package_info(package)
-            row = self.create_package_row(package_info)
-            self.packages_list.add(row)
-        self.packages_list.show_all()
+    def load_user_installed_packages(self):
+        user_installed_packages = self.package_manager.get_user_installed_packages()
 
-    def create_package_row(self, package_info):
-        # Create a horizontal box for each package with an icon and description
-        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        
-        # Use a placeholder icon. You may replace this with actual package icons.
-        icon_path = "/path/to/icons/package.png"  # Replace with an actual icon path, if needed
-        image = Gtk.Image.new_from_file(icon_path)
-        box.pack_start(image, False, False, 0)
+        for package in user_installed_packages:
+            package_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            
+            # You can set a default icon or use package-specific icons if available
+            icon_path = self.get_package_icon_path(package['name'])
+            package_icon = Gtk.Image.new_from_pixbuf(GdkPixbuf.Pixbuf.new_from_file(icon_path))
+            package_box.pack_start(package_icon, False, False, 0)
 
-        # Package name and description
-        name_label = Gtk.Label(label=package_info['name'], xalign=0)
-        description_label = Gtk.Label(label=package_info['description'], xalign=0)
-        
-        box.pack_start(name_label, True, True, 0)
-        box.pack_start(description_label, True, True, 0)
-        
-        return box
+            package_name_label = Gtk.Label(label=package['name'])
+            package_description_label = Gtk.Label(label=package['description'])
+            
+            package_box.pack_start(package_name_label, True, True, 0)
+            package_box.pack_start(package_description_label, True, True, 0)
+
+            self.pack_list_box.pack_start(package_box, False, False, 0)
+
+        self.pack_list_box.show_all()
 
     def load_alerts(self):
+        # Placeholder for alerts
         alerts = ["Update available for package X", "Portage sync needed"]
         for alert in alerts:
             label = Gtk.Label(label=alert)
             label.set_xalign(0)
             self.alerts_box.pack_start(label, False, False, 0)
         self.alerts_box.show_all()
+
+    def get_package_icon_path(self, package_name):
+        # Placeholder for icon retrieval logic
+        # Return a default icon path until package-specific icons are created
+        return "/path/to/default/icon.png"
 
     # Callback functions for quick actions
     def on_update_all_clicked(self, widget):
@@ -90,12 +101,12 @@ class HomeView(Gtk.Box):
 
     def on_view_categories_clicked(self, widget):
         print("View Categories clicked")
-    
+
     def on_search_activated(self, entry):
         search_query = self.search_bar.get_text()
         matched_packages = self.package_manager.search_packages(search_query)
         self.update_suggested_packages(matched_packages)
 
     def update_suggested_packages(self, packages):
-        # This part can be updated to refresh the packages list dynamically if required
+        # Placeholder for matched package display logic
         pass
