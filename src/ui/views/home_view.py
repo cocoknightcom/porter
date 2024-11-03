@@ -64,8 +64,8 @@ class HomeView(Gtk.Box):
         
         # Set name as a title (bold) and description as normal text
         name_label = Gtk.Label(label=package["name"])
-        description_label = Gtk.Label(label=f"{package['description']}\n<small>Category: {package['category']}</small>")
-        
+        description_label = Gtk.Label(label=f"{package['description']}\n<small>Category: {package.get('category', 'Unknown')}</small>")
+
         name_label.set_use_markup(True)  # Enable markup for formatting
         name_label.set_label(f"<b>{package['name']}</b>")
         description_label.set_use_markup(True)  # Enable markup for formatting

@@ -31,7 +31,7 @@ class PackageManager:
         if stdout:
             lines = stdout.splitlines()
             description = lines[0].strip() if len(lines) > 0 else "No description available"
-            category = package_name.split('/')[0]  # Assuming that package_name is of the format 'category/name'
+            category = package_name.split('/')[0] if '/' in package_name else "Unknown"  # Ensure there's a category
             return {"name": package_name, "description": description, "category": category}
         return {"name": package_name, "description": "No description available", "category": "Unknown"}
 
