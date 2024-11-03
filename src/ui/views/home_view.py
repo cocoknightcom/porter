@@ -49,15 +49,17 @@ class HomeView(Gtk.Box):
     def load_installed_packages(self):
         # Fetch installed packages
         installed_packages = self.package_manager.get_installed_packages()
+        self.packages_box.foreach(lambda widget: self.packages_box.remove(widget))  # Clear previous entries
         for package in installed_packages:
             self.add_package_item(package)
             
     def add_package_item(self, package):
         """Create and add a package item to display."""
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        
-        # Create an image (icon)
-        icon_image = Gtk.Image.new_from_file(package["icon"]) if os.path.exists(package["icon"]) else Gtk.Image.new_from_icon_name("package", Gtk.IconSize.DIALOG)
+
+        # Create an image (icon), assuming a placeholder for icons
+        icon_path = f"icons/{package['name']}.png"  # Example path for icons
+        icon_image = Gtk.Image.new_from_file(icon_path) if os.path.exists(icon_path) else Gtk.Image.new_from_icon_name("package", Gtk.IconSize.DIALOG)
         hbox.pack_start(icon_image, False, False, 0)
 
         # Create a vertical box for text

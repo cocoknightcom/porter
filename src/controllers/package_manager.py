@@ -6,8 +6,8 @@ class PackageManager:
     
     def get_installed_packages(self):
         """
-        Retrieves installed packages from the @world set along with descriptions.
-        Returns a list of dictionaries containing package name, description, and icon path.
+        Retrieves explicitly user-installed packages from the @world set along with descriptions.
+        Returns a list of dictionaries containing package name and description.
         """
         stdout, _ = run_command(["equery", "list", "@world"])
         packages = []
@@ -15,18 +15,16 @@ class PackageManager:
         for line in stdout.splitlines():
             package_name = line.strip()
             package_info = self.get_package_info(package_name)
-            icon_path = f"icons/{package_name}.png"  # Example path for icons
             packages.append({
                 "name": package_name,
                 "description": package_info["description"],
-                "icon": icon_path
             })
 
         return packages
 
     def get_package_info(self, package_name):
         stdout, _ = run_command(["equery", "meta", package_name])
-        info = {"name": package_name, "description": stdout.strip()}
+        info = {"description": stdout.strip()}
         return info
     def get_suggested_packages(self):
         """
