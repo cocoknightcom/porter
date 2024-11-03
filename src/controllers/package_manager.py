@@ -3,23 +3,26 @@ import subprocess
 from src.utils.command_utils import run_command
 
 class PackageManager:
-    def get_user_installed_packages(self):
+    
+    def get_installed_packages(self):
         """
-        Retrieves a list of user-installed packages from the @world set
-        including their descriptions.
+        Retrieves installed packages from the @world set along with descriptions.
+        Returns a list of dictionaries containing package name, description, and icon path.
         """
         stdout, _ = run_command(["equery", "list", "@world"])
-        packages = stdout.splitlines()
-        package_details = []
+        packages = []
+        
+        for line in stdout.splitlines():
+            package_name = line.strip()
+            package_info = self.get_package_info(package_name)
+            icon_path = f"icons/{package_name}.png"  # Example path for icons
+            packages.append({
+                "name": package_name,
+                "description": package_info["description"],
+                "icon": icon_path
+            })
 
-        for package in packages:
-            info = self.get_package_info(package)
-            package_details.append(info)
-
-        return package_details
-    def get_installed_packages(self):
-        stdout, _ = run_command(["equery", "list", "*"])
-        return stdout.splitlines()
+        return packages
 
     def get_package_info(self, package_name):
         stdout, _ = run_command(["equery", "meta", package_name])
