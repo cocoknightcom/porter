@@ -6,6 +6,12 @@ class PackageManager:
     def get_installed_packages(self):
         stdout, _ = run_command(["equery", "list", "*"])
         return stdout.splitlines()
+    def get_world_packages(self):
+        """
+        Retrieve a list of user-installed packages in @world.
+        """
+        stdout, _ = run_command(["equery", "list", "installed", "@world"])
+        return stdout.splitlines()
 
     def get_package_info(self, package_name):
         stdout, _ = run_command(["equery", "meta", package_name])
