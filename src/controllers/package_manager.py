@@ -27,10 +27,10 @@ class PackageManager:
         return packages
 
     def get_package_info(self, package_name):
-        stdout, _ = run_command(["equery", "meta", package_name])
+        stdout, _ = run_command(["eix", "-I", package_name])  # Use eix for installed package info
         if stdout:
             lines = stdout.splitlines()
-            description = lines[0].strip() if len(lines) > 0 else "No description available"
+            description = lines[1].strip() if len(lines) > 1 else "No description available"  # Get the second line for the description
             category = package_name.split('/')[0] if '/' in package_name else "Unknown"  # Ensure there's a category
             return {"name": package_name, "description": description, "category": category}
         return {"name": package_name, "description": "No description available", "category": "Unknown"}
