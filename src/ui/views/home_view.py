@@ -1,4 +1,5 @@
 # src/ui/views/home_view.py
+import os
 from gi.repository import Gtk
 from src.controllers.package_manager import PackageManager
 
