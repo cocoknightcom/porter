@@ -34,17 +34,12 @@ class HomeView(Gtk.Box):
 
         # Create a ScrolledWindow for packages
         self.packages_scrolled_window = Gtk.ScrolledWindow()
-        self.packages_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.packages_box = Gtk.Grid()
+        self.packages_box.set_column_spacing(10)
+        self.packages_box.set_row_spacing(10)
         self.packages_scrolled_window.add(self.packages_box)  # Add packages_box to the scrolled window
         self.pack_start(self.packages_scrolled_window, True, True, 0)
-        
-        self.horizontal_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)  # Create a box for the 3-columns layout
-        self.packages_box.pack_start(self.horizontal_box, True, True, 0)  # Add to the main box
-        self.current_row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.horizontal_box.pack_start(self.current_row, True, True, 0)  # Start with the first column
-        
-        self.column_count = 0  # To track the current column
-        
+
         self.load_installed_packages()  # Load installed packages when initialized
 
         # Notifications/Alerts section
@@ -59,10 +54,10 @@ class HomeView(Gtk.Box):
     def load_installed_packages(self):
         # Fetch installed packages
         installed_packages = self.package_manager.get_installed_packages()
-        for package in installed_packages:
-            self.add_package_item(package)
+        for index, package in enumerate(installed_packages):
+            self.add_package_item(package, index)
 
-    def add_package_item(self, package):
+    def add_package_item(self, package, index):
         """Create and add a package item to display."""
         # Create a vertical box for text
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)
@@ -83,16 +78,10 @@ class HomeView(Gtk.Box):
         hbox.pack_start(icon_image, False, False, 0)
         hbox.pack_start(vbox, True, True, 0)
 
-        # Create a new horizontal box if the current one has 3 items
-        if self.column_count < 3:
-            self.current_row.pack_start(hbox, True, True, 0)  # Add to current column
-            self.column_count += 1  # Move to the next column
-        else:
-            # If 3 columns are already there, reset the count and start a new row
-            self.current_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-            self.horizontal_box.pack_start(self.current_row, True, True, 0)  # Add new row to the horizontal box
-            self.current_row.pack_start(hbox, True, True, 0)  # Add new package item to the new row
-            self.column_count = 1  # Reset the column count to 1 for the new row
+        # Add the package item into the grid
+        row = index // 3  # Calculate the row based on the index
+        col = index % 3   # Calculate the column based on the index
+        self.packages_box.attach(hbox, col, row, 1, 1)  # Add to the grid
 
         self.packages_box.show_all()
 
