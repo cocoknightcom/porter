@@ -32,21 +32,21 @@ class PackageManager:
         # Get package name
         stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<name>"])
         if stdout.strip():  # Check if there is output
-            package_info["name"] = stdout.strip()
+            package_info["name"] = stdout.strip()[0]
         else:
             package_info["name"] = "Unknown"
 
         # Get package description
         stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<description>"])
         if stdout.strip():
-            package_info["description"] = stdout.strip()
+            package_info["description"] = stdout.strip()[0]
         else:
             package_info["description"] = "No description available"
 
         # Get package category/name
         stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<category>/<name>"])
         if stdout.strip():
-            package_info["category"] = stdout.strip()
+            package_info["category"] = stdout.strip()[0]
         else:
             package_info["category"] = "Unknown"
 
