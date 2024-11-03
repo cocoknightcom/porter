@@ -59,12 +59,11 @@ class HomeView(Gtk.Box):
 
     def add_package_item(self, package, index):
         """Create and add a package item to display."""
-        # Create a vertical box for text
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)
         
         # Set name as a title (bold) and description as normal text
         name_label = Gtk.Label(label=package["name"])  # Only display the package name as title
-        description_label = Gtk.Label(label=f"{package['description']}\n<small>Category: {package.get('category', 'Unknown')}</small>")
+        description_label = Gtk.Label(label=f"{package['description']}\n<small>Category: {package['category']}</small>")  # Updated category info
 
         name_label.set_use_markup(True)  # Enable markup for formatting
         name_label.set_label(f"<b>{package['name']}</b>")  # Keep it as bold
@@ -77,14 +76,12 @@ class HomeView(Gtk.Box):
         vbox.pack_start(name_label, False, False, 0)
         vbox.pack_start(description_label, False, False, 0)
 
-        # Create an image (icon)
         icon_image = Gtk.Image.new_from_file(package["icon"]) if os.path.exists(package["icon"]) else Gtk.Image.new_from_icon_name("package", Gtk.IconSize.DIALOG)
 
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         hbox.pack_start(icon_image, False, False, 0)
         hbox.pack_start(vbox, True, True, 0)
 
-        # Add the package item into the grid
         row = index // 3  # Calculate the row based on the index
         col = index % 3   # Calculate the column based on the index
         self.packages_box.attach(hbox, col, row, 1, 1)  # Add to the grid

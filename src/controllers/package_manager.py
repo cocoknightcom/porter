@@ -7,20 +7,19 @@ class PackageManager:
     def get_installed_packages(self):
         packages = []
         
-        # For simplicity, setting a default icon for each package
         default_icon_path = "/path/to/default/icon.png"  # Replace with actual default icon path
 
-        # The rest of the code remains the same
         stdout, _ = run_command(["equery", "list", "@world"])
         
         for line in stdout.splitlines():
             package_name = line.strip()
             package_info = self.get_package_info(package_name)
 
-            # Append only user-installed packages with their short descriptions and an icon
+            # Append only user-installed packages with their short descriptions, category, and an icon
             packages.append({
-                "name": package_name,
+                "name": package_info["name"],
                 "description": package_info["description"],  # Short description only
+                "category": package_info["category"],  # Include category
                 "icon": default_icon_path  # Add icon path here
             })
 
