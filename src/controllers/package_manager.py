@@ -12,7 +12,7 @@ class PackageManager:
         stdout, _ = run_command(["equery", "list", "@world"])
         
         for line in stdout.splitlines():
-            package_name = line.strip()
+            package_name = line.strip().split(" ")[0]  # Extract just the package name without the version
             package_info = self.get_package_info(package_name)
 
             # Append only user-installed packages with their short descriptions, category, and an icon
