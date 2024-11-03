@@ -15,13 +15,14 @@ class PackageManager:
             package_name = line.strip()
             package_info = self.get_package_info(package_name)
 
-            # Append only user-installed packages with their short descriptions, category, and an icon
-            packages.append({
-                "name": package_info["name"],
-                "description": package_info["description"],  # Short description only
-                "category": package_info["category"],  # Include category
-                "icon": default_icon_path  # Add icon path here
-            })
+            # Append only if the package_info has valid values
+            if package_info["name"] and package_info["description"] != "No description available" and package_info["category"] != "Unknown":
+                packages.append({
+                    "name": package_info["name"],
+                    "description": package_info["description"],  # Short description only
+                    "category": package_info["category"],  # Include category
+                    "icon": default_icon_path  # Add icon path here
+                })
 
         return packages
 
