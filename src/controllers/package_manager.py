@@ -28,30 +28,27 @@ class PackageManager:
 
     def get_package_info(self, package_name):
         package_info = {}
-        
-        # Get package info using a more refined format specification
-        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<name> [<version>] - <description> (<category>)"])
-        if stdout.strip():
-            # Split output into lines and take the first match
-            package_lines = stdout.strip().splitlines()
-            first_match = package_lines[0].split(" - ")
-            if len(first_match) == 2:
-                # Extract name, version, description, and category correctly
-                name_version = first_match[0].split("[")
-                package_info["name"] = name_version[0].strip()
-                package_info["version"] = name_version[1].rstrip("]") if len(name_version) > 1 else "Unknown"
-                package_info["description"], category_info = first_match[1].strip().split(" (")
-                package_info["category"] = category_info.rstrip(")")  # Remove the closing parenthesis
-            else:
-                package_info["name"] = "Unknown"
-                package_info["description"] = "No description available"
-                package_info["category"] = "Unknown"
-                package_info["version"] = "Unknown"
+
+        # Get package name
+        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<name>", "--selected-file"])
+        if stdout.strip():  # Check if there is output
+            package_info["name"] = stdout.strip().split('[1]')[0]
         else:
             package_info["name"] = "Unknown"
+
+        # Get package description
+        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<description>", "--selected-file"])
+        if stdout.strip():
+            package_info["description"] = stdout.strip().split('[1]')[0]
+        else:
             package_info["description"] = "No description available"
+
+        # Get package category/name
+        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<category>/<name>", "--selected-file"])
+        if stdout.strip():
+            package_info["category"] = stdout.strip().split('[1]')[0]
+        else:
             package_info["category"] = "Unknown"
-            package_info["version"] = "Unknown"
 
         return package_info
 
