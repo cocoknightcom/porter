@@ -1,3 +1,4 @@
+# src/utils/log_utils.py
 import os
 
 def tail_log(file_path, lines=10):

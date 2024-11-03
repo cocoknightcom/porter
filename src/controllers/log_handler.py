@@ -1,3 +1,4 @@
+# src/controllers/log_handler.py
 from src.utils.log_utils import tail_log
 
 class LogHandler:

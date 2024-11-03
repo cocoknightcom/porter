@@ -8,10 +8,11 @@ class HomeView(Gtk.Box):
         self.parent = parent
         self.package_manager = PackageManager()
 
-        # Create a search bar with a rounded entry
+        # Create a search bar with a rounded entry and connect the signal
         self.search_bar = Gtk.Entry()
         self.search_bar.set_placeholder_text("Search Packages")
-        self.search_bar.get_style_context().add_class("rounded")  # Custom CSS will handle the rounded styling
+        self.search_bar.set_property("width_chars", 30)
+        self.search_bar.connect("activate", self.on_search_activated)  # Connect signal for enter key
         self.pack_start(self.search_bar, False, False, 0)
 
         # Quick Actions row
@@ -83,4 +84,18 @@ class HomeView(Gtk.Box):
 
     def on_view_categories_clicked(self, widget):
         print("View Categories clicked")
+    
+    def on_search_activated(self, entry):
+        search_query = self.search_bar.get_text()
+        matched_packages = self.package_manager.search_packages(search_query)  # New method
+        self.update_suggested_packages(matched_packages)
+
+    def update_suggested_packages(self, packages):
+        for child in self.suggested_packages_box.get_children():
+            self.suggested_packages_box.remove(child)
+        for package in packages:
+            label = Gtk.Label(label=package)
+            label.set_xalign(0)
+            self.suggested_packages_box.pack_start(label, False, False, 0)
+        self.suggested_packages_box.show_all()
 

@@ -1,3 +1,4 @@
+# src/ui/main_window.py
 from gi.repository import Gtk
 from src.ui.views.home_view import HomeView
 from src.ui.views.package_detail import PackageDetailView

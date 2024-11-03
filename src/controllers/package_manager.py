@@ -48,3 +48,11 @@ class PackageManager:
             subprocess.run(["sudo", "emerge", "--unmerge", package_name], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error removing package {package_name}: {e}")
+            
+    def search_packages(self, query):
+        """
+        Search for packages matching the query using `equery` for localinstalled packages.
+        Returns a list of package names that match the query.
+        """
+        stdout, _ = run_command(["equery", "list", query])
+        return stdout.splitlines()

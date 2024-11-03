@@ -1,3 +1,4 @@
+# src/ui/views/log_view.py
 from gi.repository import Gtk
 from src.controllers.log_handler import LogHandler
 
