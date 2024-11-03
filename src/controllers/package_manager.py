@@ -28,26 +28,22 @@ class PackageManager:
 
     def get_package_info(self, package_name):
         package_info = {}
+        
+        # Get package info using a more refined format specification
+        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<name> [<version>] - <description> (<category>)"])
+        if stdout.strip():
+            # Split output into lines and take the first match
+            package_lines = stdout.strip().splitlines()
+            first_match = package_lines[0].split(" - ")
+            if len(first_match) == 2:
+                package_info["name"], rest = first_match[0].split("[")
+                package_info["description"], category_info = rest.strip().split(" (")
+                package_info["category"] = category_info.rstrip(")")  # Remove the closing parenthesis
+                package_info["version"] = package_info["name"].split("[")[1].rstrip("]")  # Extract version from the name
 
-        # Get package name
-        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<name>"])
-        if stdout.strip():  # Check if there is output
-            package_info["name"] = stdout.strip().split()[0].splitlines()[0]
         else:
             package_info["name"] = "Unknown"
-
-        # Get package description
-        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<description>"])
-        if stdout.strip():
-            package_info["description"] = stdout.strip().split()[0].splitlines()[0]
-        else:
             package_info["description"] = "No description available"
-
-        # Get package category/name
-        stdout, stderr = run_command(["eix", "-I", package_name, "--format", "<category>/<name>"])
-        if stdout.strip():
-            package_info["category"] = stdout.strip().split()[0].splitlines()[0]
-        else:
             package_info["category"] = "Unknown"
 
         return package_info
