@@ -5,23 +5,26 @@ from src.utils.command_utils import run_command
 class PackageManager:
     
     def get_installed_packages(self):
-        """
-        Retrieves explicitly user-installed packages from the @world set along with descriptions.
-        Returns a list of dictionaries containing package name and description.
-        """
-        stdout, _ = run_command(["equery", "list", "@world"])
-        packages = []
-        
-        for line in stdout.splitlines():
-            package_name = line.strip()
-            package_info = self.get_package_info(package_name)
-            # Append only user-installed packages with their short descriptions
-            packages.append({
-                "name": package_name,
-                "description": package_info["description"],  # Short description only
-            })
+    packages = []
+    
+    # For simplicity, setting a default icon for each package
+    default_icon_path = "/path/to/default/icon.png"  # Replace with actual default icon path
 
-        return packages
+    # The rest of the code remains the same
+    stdout, _ = run_command(["equery", "list", "@world"])
+    
+    for line in stdout.splitlines():
+        package_name = line.strip()
+        package_info = self.get_package_info(package_name)
+
+        # Append only user-installed packages with their short descriptions and an icon
+        packages.append({
+            "name": package_name,
+            "description": package_info["description"],  # Short description only
+            "icon": default_icon_path  # Add icon path here
+        })
+
+    return packages
 
     def get_package_info(self, package_name):
         stdout, _ = run_command(["equery", "meta", package_name])
