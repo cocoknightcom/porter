@@ -27,13 +27,21 @@ class PackageManager:
         return packages
 
     def get_package_info(self, package_name):
-        stdout, _ = run_command(["eix", "-I", package_name])  # Use eix for installed package info
-        if stdout:
-            lines = stdout.splitlines()
-            description = lines[1].strip() if len(lines) > 1 else "No description available"  # Get the second line for the description
-            category = package_name.split('/')[0] if '/' in package_name else "Unknown"  # Ensure there's a category
-            return {"name": package_name, "description": description, "category": category}
-        return {"name": package_name, "description": "No description available", "category": "Unknown"}
+        package_info = {}
+        
+        # Get package name
+        stdout, _ = run_command(["eix", "-I", package_name, "--format", "<name>"])
+        package_info["name"] = stdout.strip() if stdout else "Unknown"
+
+        # Get package description
+        stdout, _ = run_command(["eix", "-I", package_name, "--format", "<description>"])
+        package_info["description"] = stdout.strip() if stdout else "No description available"
+
+        # Get package category
+        stdout, _ = run_command(["eix", "-I", package_name, "--format", "<category>/<name>"])
+        package_info["category"] = stdout.strip() if stdout else "Unknown"
+
+        return package_info
 
     def install_package(self, package_name):
         """
