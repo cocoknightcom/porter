@@ -40,3 +40,4 @@ dmypy.json
 
 # Exclude Blender files
 *.blend
+*.blend1

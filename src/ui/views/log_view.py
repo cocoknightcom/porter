@@ -8,10 +8,14 @@ class LogView(Gtk.Box):
         self.parent = parent
         self.log_handler = LogHandler()
 
+        # Create a TextView and its buffer
         self.text_view = Gtk.TextView()
         self.text_view.set_editable(False)
         self.pack_start(self.text_view, True, True, 0)
 
+        # Initialize the TextBuffer to manage the content of the TextView
+        self.text_buffer = self.text_view.get_buffer()
+        
         self.refresh_logs()
 
     def refresh_logs(self):
@@ -20,5 +24,5 @@ class LogView(Gtk.Box):
         # Join the list into a single string, with each line separated by a newline
         log_content_str = "\n".join(log_content)
         
-        buffer = self.text_view.get_buffer()
-        buffer.set_text(log_content_str)
+        # Use the text buffer to set the text in the TextView
+        self.text_buffer.set_text(log_content_str)
