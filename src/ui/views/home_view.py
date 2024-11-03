@@ -63,37 +63,35 @@ class HomeView(Gtk.Box):
             self.add_package_item(package)
 
     def add_package_item(self, package):
-        """Create and add a package item to display."""
-        # Create a vertical box for text
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)
-        name_label = Gtk.Label(label=package["name"])
-        description_label = Gtk.Label(label=package["description"])
-        
-        # Align text to the left
-        name_label.set_xalign(0)
-        description_label.set_xalign(0)
+    """Create and add a package item to display."""
+    # Create a vertical box for text
+    vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)
+    name_label = Gtk.Label(label=package["name"])
+    description_label = Gtk.Label(label=package["description"])
+    
+    # Align text to the left
+    name_label.set_xalign(0)
+    description_label.set_xalign(0)
 
-        vbox.pack_start(name_label, False, False, 0)
-        vbox.pack_start(description_label, False, False, 0)
+    vbox.pack_start(name_label, False, False, 0)
+    vbox.pack_start(description_label, False, False, 0)
 
-        # Create an image (icon)
-        icon_image = Gtk.Image.new_from_file(package["icon"]) if os.path.exists(package["icon"]) else Gtk.Image.new_from_icon_name("package", Gtk.IconSize.DIALOG)
+    # Create an image (icon)
+    icon_image = Gtk.Image.new_from_file(package["icon"]) if os.path.exists(package["icon"]) else Gtk.Image.new_from_icon_name("package", Gtk.IconSize.DIALOG)
 
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        hbox.pack_start(icon_image, False, False, 0)
-        hbox.pack_start(vbox, True, True, 0)
+    package_item_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+    package_item_box.pack_start(icon_image, False, False, 0)
+    package_item_box.pack_start(vbox, True, True, 0)
 
-        if self.column_count < 3:
-            self.current_row.pack_start(hbox, False, False, 0)  # Add to current column
-            self.column_count += 1  # Move to the next column
-        else:
-            # If 3 columns are already there, create a new row
-            self.current_row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-            self.horizontal_box.pack_start(self.current_row, True, True, 0)  # Add new column to horizontal box
-            self.current_row.pack_start(hbox, False, False, 0)  # Add new package item to the new column
-            self.column_count = 1  # Reset the column count
-        
-        self.packages_box.show_all()
+    # Create a new horizontal box for the packages if necessary
+    if self.column_count % 3 == 0:
+        self.current_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        self.horizontal_box.pack_start(self.current_row, False, False, 0)
+
+    self.current_row.pack_start(package_item_box, True, True, 0)  # Add package item to the current column
+    self.column_count += 1  # Increment column count
+    
+    self.packages_box.show_all()
 
     def load_alerts(self):
         # Placeholder: Replace with dynamic loading of alerts
