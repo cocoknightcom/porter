@@ -40,7 +40,6 @@ class HomeView(Gtk.Box):
         
         self.horizontal_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)  # Create a box for the 3-columns layout
         self.packages_box.pack_start(self.horizontal_box, True, True, 0)  # Add to the main box
-        self.current_column_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.current_row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.horizontal_box.pack_start(self.current_row, True, True, 0)  # Start with the first column
         
@@ -84,17 +83,17 @@ class HomeView(Gtk.Box):
         hbox.pack_start(icon_image, False, False, 0)
         hbox.pack_start(vbox, True, True, 0)
 
-        # Use a 3-column layout inside the horizontal box
+        # Create a new horizontal box if the current one has 3 items
         if self.column_count < 3:
-            self.current_column_box.pack_start(hbox, True, True, 0)  # Add to current column
+            self.current_row.pack_start(hbox, True, True, 0)  # Add to current column
             self.column_count += 1  # Move to the next column
         else:
-            # If 3 columns are already there, create a new column
-            self.current_column_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-            self.horizontal_box.pack_start(self.current_column_box, True, True, 0)  # Add new column to horizontal box
-            self.current_column_box.pack_start(hbox, True, True, 0)  # Add new package item to the new column
-            self.column_count = 1  # Reset the column count
-            
+            # If 3 columns are already there, reset the count and start a new row
+            self.current_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+            self.horizontal_box.pack_start(self.current_row, True, True, 0)  # Add new row to the horizontal box
+            self.current_row.pack_start(hbox, True, True, 0)  # Add new package item to the new row
+            self.column_count = 1  # Reset the column count to 1 for the new row
+
         self.packages_box.show_all()
 
     def load_alerts(self):
