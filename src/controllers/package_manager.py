@@ -6,13 +6,14 @@ class PackageManager:
     
     def get_installed_packages(self):
         packages = []
-        
+
         default_icon_path = "/path/to/default/icon.png"  # Replace with actual default icon path
 
-        stdout, _ = run_command(["equery", "list", "@world"])
-        
-        for line in stdout.splitlines():
-            package_name = line.strip().split(" ")[0]  # Extract just the package name without the version
+        # Read package names from /var/lib/portage/world
+        with open("/var/lib/portage/world", "r") as f:
+            package_names = f.read().splitlines()
+
+        for package_name in package_names:
             package_info = self.get_package_info(package_name)
 
             # Append only user-installed packages with their short descriptions, category, and an icon
