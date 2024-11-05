@@ -105,9 +105,12 @@ class HomeView(Gtk.Box):
         success = self.package_manager.sync_portage()
         if success:
             print("Portage synced successfully.")
-            self.load_installed_packages()  # Refresh the package list if needed
+            self.alerts_box.pack_start(Gtk.Label(label="Portage sync completed successfully."), False, False, 0)
+            self.log_view.refresh_logs()  # Refresh logs
         else:
             print("Failed to sync Portage.")
+            self.alerts_box.pack_start(Gtk.Label(label="Failed to sync Portage. Please check the logs."), False, False, 0)
+        self.alerts_box.show_all()  # Make sure to refresh UI to show alert messages
 
     def on_view_installed_clicked(self, widget):
         print("View Installed Packages clicked")
