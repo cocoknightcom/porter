@@ -44,7 +44,7 @@ class HomeView(Gtk.Box):
         # Loading spinner now only managed on package loading
         self.loading_spinner = Gtk.Spinner()
         self.loading_spinner.set_margin_top(20)
-        
+        self.pack_start(self.loading_spinner, True, False, 0)  # Pack the spinner initially
         self.load_installed_packages()  # Load installed packages when initialized
 
         # Notifications/Alerts section

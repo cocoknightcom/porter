@@ -32,20 +32,8 @@ class MainWindow(Gtk.Window):
         vbox.pack_start(self.stack, True, True, 0)
         self.add(vbox)
 
-        # Show the main window first
-        self.show_all()  # Display the window before loading data
-
-        # Load the home view and data in the background with a spinner
-        self.home_view.show_loading_spinner()
-        self.load_home_data()  # Load home data asynchronously
-
-    # Load the home data as a non-blocking operation
-    def load_home_data(self):
-        GLib.idle_add(self._load_home_data_internal)
-
-    def _load_home_data_internal(self):
-        self.home_view.load_installed_packages()  # Load installed packages asynchronously
-        return False  # Prevent continuous calls of this function
+        # Show the main window immediately
+        self.show_all()  # Display the window first
         
     def navigate_to(self, view_name):
         if view_name == "home":
