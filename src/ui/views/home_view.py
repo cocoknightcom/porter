@@ -2,7 +2,7 @@
 import os
 from gi.repository import Gtk, Gdk, GLib
 from src.controllers.package_manager import PackageManager
-from src.ui.views import LogView
+from src.ui.views.log_view import LogView
 
 class HomeView(Gtk.Box):
     def __init__(self, parent):
