@@ -57,14 +57,16 @@ class HomeView(Gtk.Box):
         self.load_alerts()
 
     def show_loading_spinner(self):
-        self.loading_spinner.set_property("visible", True)  # Show spinner
-        self.pack_start(self.loading_spinner, True, False, 0)  # Ensure spinner is visible in layout
-        self.loading_spinner.start()  # Start the spinner
+        if not self.loading_spinner.get_visible():
+            self.loading_spinner.set_property("visible", True)  # Show spinner
+            self.pack_start(self.loading_spinner, True, False, 0)  # Ensure spinner is visible in layout
+            self.loading_spinner.start()  # Start the spinner
 
     def hide_loading_spinner(self):
         self.loading_spinner.stop()  # Stop the spinner
         self.loading_spinner.set_property("visible", False)  # Hide spinner
-        self.remove(self.loading_spinner)  # Remove spinner from the view
+        if self.loading_spinner in self.get_children():
+            self.remove(self.loading_spinner)  # Remove spinner from the view
         
     def load_installed_packages(self):
         self.show_loading_spinner()

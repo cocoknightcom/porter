@@ -24,6 +24,7 @@ class LogView(Gtk.Box):
 
     def refresh_logs(self):
         self.loading_spinner.start()  # Start the spinner
+        self.loading_spinner.set_property("visible", True)  # Show spinner if not already visible
         GLib.idle_add(self._load_logs_background)
 
     def _load_logs_background(self):
@@ -35,5 +36,8 @@ class LogView(Gtk.Box):
         # Use the text buffer to set the text in the TextView
         self.text_buffer.set_text(log_content_str)
         self.loading_spinner.stop()  # Stop the spinner
-        self.remove(self.loading_spinner)
+        self.loading_spinner.set_property("visible", False)  # Hide spinner
+        # Ensure the spinner is removed from the view
+        if self.loading_spinner in self.get_children():
+            self.remove(self.loading_spinner)
         return False  # Exit the idle function to not call it again
