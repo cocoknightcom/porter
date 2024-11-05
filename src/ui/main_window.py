@@ -35,7 +35,8 @@ class MainWindow(Gtk.Window):
         # Show the main window first
         self.show_all()  # Display the window before loading data
 
-        # Load the home view and data in the background
+        # Load the home view and data in the background with a spinner
+        self.home_view.show_loading_spinner()
         GLib.idle_add(self.load_home_data)
         
     def load_home_data(self):

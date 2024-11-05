@@ -56,19 +56,26 @@ class HomeView(Gtk.Box):
         self.pack_start(self.alerts_box, False, False, 0)
         self.load_alerts()
 
-    def load_installed_packages(self):
-        # Start loading installed packages in the background
-        self.pack_start(self.loading_spinner, False, False, 0)  # Add spinner to the view
+    def show_loading_spinner(self):
+        self.loading_spinner.set_property("visible", True)  # Show spinner
+        self.pack_start(self.loading_spinner, True, False, 0)  # Ensure spinner is visible in layout
         self.loading_spinner.start()  # Start the spinner
+
+    def hide_loading_spinner(self):
+        self.loading_spinner.stop()  # Stop the spinner
+        self.loading_spinner.set_property("visible", False)  # Hide spinner
+        self.remove(self.loading_spinner)  # Remove spinner from the view
+        
+    def load_installed_packages(self):
+        self.show_loading_spinner()
         GLib.idle_add(self._load_installed_packages_background)
 
     def _load_installed_packages_background(self):
         installed_packages = self.package_manager.get_installed_packages()
         for index, package in enumerate(installed_packages):
             GLib.idle_add(self.add_package_item, package, index)
-
-        self.loading_spinner.stop()  # Stop the spinner after loading
-        self.remove(self.loading_spinner)  # Remove spinner
+            
+        self.hide_loading_spinner()
         return False  # Stop calling this function
 
     def add_package_item(self, package, index):
