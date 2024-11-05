@@ -9,6 +9,11 @@ class MainWindow(Gtk.Window):
     def __init__(self):
         super().__init__(title="Porter - Gentoo Package Manager GUI")
 
+        # Initialize Stack and StackSwitcher
+        self.stack = Gtk.Stack()
+        self.stack_switcher = Gtk.StackSwitcher()
+        self.stack_switcher.set_stack(self.stack)
+        
         # Initialize views
         self.home_view = HomeView(self)
         self.package_detail_view = PackageDetailView(self)
