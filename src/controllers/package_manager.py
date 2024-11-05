@@ -77,3 +77,13 @@ class PackageManager:
         """
         stdout, _ = run_command(["equery", "list", query])
         return stdout.splitlines()
+    def sync_portage(self):
+        """
+        Sync the Portage tree using emerge --sync.
+        """
+        try:
+            subprocess.run(["sudo", "emerge", "--sync"], check=True)
+            return True  # Indicate success
+        except subprocess.CalledProcessError as e:
+            print(f"Error syncing Portage: {e}")
+            return False  # Indicate failure

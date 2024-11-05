@@ -102,7 +102,12 @@ class HomeView(Gtk.Box):
         print("Update All clicked")
 
     def on_sync_portage_clicked(self, widget):
-        print("Sync Portage clicked")
+        success = self.package_manager.sync_portage()
+        if success:
+            print("Portage synced successfully.")
+            self.load_installed_packages()  # Refresh the package list if needed
+        else:
+            print("Failed to sync Portage.")
 
     def on_view_installed_clicked(self, widget):
         print("View Installed Packages clicked")
