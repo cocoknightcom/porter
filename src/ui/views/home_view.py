@@ -1,6 +1,6 @@
 # src/ui/views/home_view.py
 import os
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 from src.controllers.package_manager import PackageManager
 from src.ui.views import LogView
 
@@ -53,10 +53,14 @@ class HomeView(Gtk.Box):
         self.load_alerts()
 
     def load_installed_packages(self):
-        # Fetch installed packages
+        # Start loading installed packages in the background
+        GLib.idle_add(self._load_installed_packages_background)
+
+    def _load_installed_packages_background(self):
         installed_packages = self.package_manager.get_installed_packages()
         for index, package in enumerate(installed_packages):
-            self.add_package_item(package, index)
+            GLib.idle_add(self.add_package_item, package, index)
+        return False  # Stop calling this function
 
     def add_package_item(self, package, index):
         """Create and add a package item to display."""
