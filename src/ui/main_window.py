@@ -37,6 +37,8 @@ class MainWindow(Gtk.Window):
 
         # Load the home view and data in the background
         GLib.idle_add(self.load_home_data)
+    def load_home_data(self):
+        self.home_view.load_installed_packages()  # Load installed packages asynchronously
         
     def navigate_to(self, view_name):
         if view_name == "home":
