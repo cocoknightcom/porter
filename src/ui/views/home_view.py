@@ -41,10 +41,9 @@ class HomeView(Gtk.Box):
         self.packages_scrolled_window.add(self.packages_box)
         self.pack_start(self.packages_scrolled_window, True, True, 0)
 
-        # Loading spinner
+        # Loading spinner now only managed on package loading
         self.loading_spinner = Gtk.Spinner()
         self.loading_spinner.set_margin_top(20)
-        self.pack_start(self.loading_spinner, False, False, 0)
         
         self.load_installed_packages()  # Load installed packages when initialized
 
@@ -59,6 +58,7 @@ class HomeView(Gtk.Box):
 
     def load_installed_packages(self):
         # Start loading installed packages in the background
+        self.pack_start(self.loading_spinner, False, False, 0)  # Add spinner to the view
         self.loading_spinner.start()  # Start the spinner
         GLib.idle_add(self._load_installed_packages_background)
 
@@ -66,8 +66,9 @@ class HomeView(Gtk.Box):
         installed_packages = self.package_manager.get_installed_packages()
         for index, package in enumerate(installed_packages):
             GLib.idle_add(self.add_package_item, package, index)
-        
+
         self.loading_spinner.stop()  # Stop the spinner after loading
+        self.remove(self.loading_spinner)  # Remove spinner
         return False  # Stop calling this function
 
     def add_package_item(self, package, index):

@@ -8,8 +8,6 @@ from src.ui.views.settings_view import SettingsView
 class MainWindow(Gtk.Window):
     def __init__(self):
         super().__init__(title="Porter - Gentoo Package Manager GUI")
-        self.loading_indicator = Gtk.Spinner()
-        self.loading_indicator.set_margin_top(20)
 
         # Initialize Stack and StackSwitcher
         self.stack = Gtk.Stack()
@@ -35,8 +33,6 @@ class MainWindow(Gtk.Window):
         self.add(vbox)
 
         # Show the main window first
-        self.add(self.loading_indicator)
-        self.loading_indicator.start()
         self.show_all()  # Display the window before loading data
 
         # Load the home view and data in the background
@@ -44,8 +40,7 @@ class MainWindow(Gtk.Window):
         
     def load_home_data(self):
         self.home_view.load_installed_packages()  # Load installed packages asynchronously
-        self.loading_indicator.stop()
-        self.remove(self.loading_indicator)
+        return False  # Prevent continuous calls of this function
         
     def navigate_to(self, view_name):
         if view_name == "home":
