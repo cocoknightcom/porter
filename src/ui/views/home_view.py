@@ -2,6 +2,7 @@
 import os
 from gi.repository import Gtk, Gdk
 from src.controllers.package_manager import PackageManager
+from src.ui.views import LogView
 
 class HomeView(Gtk.Box):
     def __init__(self, parent):

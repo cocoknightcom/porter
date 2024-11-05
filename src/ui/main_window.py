@@ -4,10 +4,19 @@ from src.ui.views.home_view import HomeView
 from src.ui.views.package_detail import PackageDetailView
 from src.ui.views.log_view import LogView
 from src.ui.views.settings_view import SettingsView
+import asyncio
 
 class MainWindow(Gtk.Window):
     def __init__(self):
         super().__init__(title="Porter - Gentoo Package Manager GUI")
+        
+        self.connect('destroy', Gtk.main_quit)
+        # Additional setup...
+        self.GL_area = Gtk.GLArea()  # Create GL Area for handling asynchronous events
+        self.add(self.GL_area)
+        # Create an async loop
+        self.loop = asyncio.get_event_loop()
+        self.loop.run_forever()
 
         # Initialize Stack and StackSwitcher
         self.stack = Gtk.Stack()
