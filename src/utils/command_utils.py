@@ -7,8 +7,3 @@ def run_command(command):
         return result.stdout, result.stderr
     except subprocess.CalledProcessError as e:
         return "", str(e)
-def tail_log(filepath, num_lines=50):
-    with open(filepath, "r") as file:
-        lines = file.readlines()
-        return "".join(lines[-num_lines:])
-

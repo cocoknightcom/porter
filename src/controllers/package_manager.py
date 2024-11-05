@@ -53,22 +53,20 @@ class PackageManager:
         return package_info
 
     def install_package(self, package_name):
-        """
-        Installs a package using emerge.
-        """
         try:
-            subprocess.run(["sudo", "emerge", package_name], check=True)
-        except subprocess.CalledProcessError as e:
+            stdout, stderr = run_command(["emerge", package_name])
+            return stdout, stderr  # Return output for logging or UI feedback
+        except Exception as e:
             print(f"Error installing package {package_name}: {e}")
+            return None, str(e)
 
     def remove_package(self, package_name):
-        """
-        Removes a package using emerge.
-        """
         try:
-            subprocess.run(["sudo", "emerge", "--unmerge", package_name], check=True)
-        except subprocess.CalledProcessError as e:
+            stdout, stderr = run_command(["emerge", "--unmerge", package_name])
+            return stdout, stderr  # Return output for logging or UI feedback
+        except Exception as e:
             print(f"Error removing package {package_name}: {e}")
+            return None, str(e)
             
     def search_packages(self, query):
         """
@@ -103,3 +101,7 @@ class PackageManager:
             subprocess.run(["sudo", "equery", action, flag_name, package_name], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error toggling USE flag {flag_name} for package {package_name}: {e}")
+    def get_pending_updates(self):
+            """Get a list of pending updates using `eix`."""
+            stdout, _ = run_command(["eix", "-u"])
+            return stdout.splitlines()  # Returns lines indicating updates available

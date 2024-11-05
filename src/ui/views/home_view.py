@@ -38,9 +38,14 @@ class HomeView(Gtk.Box):
         self.packages_box = Gtk.Grid()
         self.packages_box.set_column_spacing(10)
         self.packages_box.set_row_spacing(10)
-        self.packages_scrolled_window.add(self.packages_box)  # Add packages_box to the scrolled window
+        self.packages_scrolled_window.add(self.packages_box)
         self.pack_start(self.packages_scrolled_window, True, True, 0)
 
+        # Loading spinner
+        self.loading_spinner = Gtk.Spinner()
+        self.loading_spinner.set_margin_top(20)
+        self.pack_start(self.loading_spinner, False, False, 0)
+        
         self.load_installed_packages()  # Load installed packages when initialized
 
         # Notifications/Alerts section
@@ -54,12 +59,15 @@ class HomeView(Gtk.Box):
 
     def load_installed_packages(self):
         # Start loading installed packages in the background
+        self.loading_spinner.start()  # Start the spinner
         GLib.idle_add(self._load_installed_packages_background)
 
     def _load_installed_packages_background(self):
         installed_packages = self.package_manager.get_installed_packages()
         for index, package in enumerate(installed_packages):
             GLib.idle_add(self.add_package_item, package, index)
+        
+        self.loading_spinner.stop()  # Stop the spinner after loading
         return False  # Stop calling this function
 
     def add_package_item(self, package, index):
