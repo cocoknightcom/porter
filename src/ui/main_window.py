@@ -29,7 +29,7 @@ class MainWindow(Gtk.Window):
         # Show the loading indicator
         self.loading_spinner = Gtk.Spinner()
         self.loading_spinner.set_margin_top(20)
-        self.pack_start(self.loading_spinner, True, False, 0)
+        vbox.pack_start(self.loading_spinner, True, False, 0)
         self.loading_spinner.start()  # Start the spinner
         self.show_all()  # Display the window first
 
