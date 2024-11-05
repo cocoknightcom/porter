@@ -82,7 +82,7 @@ class PackageManager:
         Sync the Portage tree using emerge --sync.
         """
         try:
-            subprocess.run(["sudo", "emerge", "--sync"], check=True)
+            subprocess.run(["emerge", "--sync"], check=True)
             return True  # Indicate success
         except subprocess.CalledProcessError as e:
             print(f"Error syncing Portage: {e}")
