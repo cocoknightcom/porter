@@ -37,9 +37,13 @@ class MainWindow(Gtk.Window):
 
         # Load the home view and data in the background with a spinner
         self.home_view.show_loading_spinner()
-        GLib.idle_add(self.load_home_data)
-        
+        self.load_home_data()  # Load home data asynchronously
+
+    # Load the home data as a non-blocking operation
     def load_home_data(self):
+        GLib.idle_add(self._load_home_data_internal)
+
+    def _load_home_data_internal(self):
         self.home_view.load_installed_packages()  # Load installed packages asynchronously
         return False  # Prevent continuous calls of this function
         
