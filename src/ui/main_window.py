@@ -31,9 +31,12 @@ class MainWindow(Gtk.Window):
         vbox.pack_start(self.stack_switcher, False, False, 0)
         vbox.pack_start(self.stack, True, True, 0)
         self.add(vbox)
-        
-        # Show the home view by default
-        self.stack.set_visible_child(self.home_view)
+
+        # Show the main window first
+        self.show_all()  # Display the window before loading data
+
+        # Load the home view and data in the background
+        GLib.idle_add(self.load_home_data)
         
     def navigate_to(self, view_name):
         if view_name == "home":
