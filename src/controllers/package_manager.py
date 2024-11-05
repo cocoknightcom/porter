@@ -102,6 +102,7 @@ class PackageManager:
         except subprocess.CalledProcessError as e:
             print(f"Error toggling USE flag {flag_name} for package {package_name}: {e}")
     def get_pending_updates(self):
-            """Get a list of pending updates using `eix`."""
-            stdout, _ = run_command(["eix", "-u"])
+        if stdout:
             return stdout.splitlines()  # Returns lines indicating updates available
+        else:
+            return ["No pending updates."]
