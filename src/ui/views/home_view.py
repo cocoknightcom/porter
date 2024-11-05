@@ -125,4 +125,12 @@ class HomeView(Gtk.Box):
     
     def on_search_activated(self, entry):
         search_query = self.search_bar.get_text()
-        matched_packages = self.package_manager.search_packages(search_query)
+        if search_query:  # Ensure not empty
+            matched_packages = self.package_manager.search_packages(search_query)
+            self.update_package_grid(matched_packages)
+    
+    def update_package_grid(self, packages):
+        # Clear current packages in the display
+        self.packages_box.foreach(lambda widget: self.packages_box.remove(widget))
+        for index, package in enumerate(packages):
+            self.add_package_item(package, index)

@@ -87,3 +87,19 @@ class PackageManager:
         except subprocess.CalledProcessError as e:
             print(f"Error syncing Portage: {e}")
             return False  # Indicate failure
+    def get_use_flags(self, package_name):
+        """
+        Get USE flags for a given package using equery.
+        """
+        stdout, _ = run_command(["equery", "use", package_name])
+        return stdout.splitlines()
+
+    def toggle_use_flag(self, package_name, flag_name, enable):
+        """
+        Toggle a USE flag for a specified package.
+        """
+        action = 'set' if enable else 'unset'
+        try:
+            subprocess.run(["sudo", "equery", action, flag_name, package_name], check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error toggling USE flag {flag_name} for package {package_name}: {e}")
